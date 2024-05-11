@@ -1,0 +1,59 @@
+import math
+import pygame
+
+# Инициализация Pygame
+pygame.init()
+
+# Установка размеров окна
+WIDTH, HEIGHT = 800, 600
+win = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Мухомор")
+
+# Определение цветов
+BROWN = (128, 64, 48)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+
+
+# Функция рисования мухомора
+def draw_fly_amanita():
+    # Рисование травы
+    pygame.draw.rect(win, GREEN, (0, HEIGHT - 100, WIDTH, 100))
+
+    pygame.draw.line(win, BROWN, (WIDTH // 2, HEIGHT - 200), (WIDTH // 2, HEIGHT - 50), 40)
+
+    
+
+    # Рисование красной части шляпки мухомора (полукруглая форма)
+    pygame.draw.ellipse(win, RED, (int(WIDTH / 2) - 100, HEIGHT - 400, 200, 150))
+
+    # Рисование белых точек на красной части шляпки мухомора
+    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 - 30), HEIGHT - 370), 20)
+    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 + 30), HEIGHT - 370), 20)
+    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 - 50), HEIGHT - 300), 20)
+    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 + 50), HEIGHT - 300), 20)  
+    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 - 50), HEIGHT - 300), 20)
+    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 + 50), HEIGHT - 300), 20)      
+
+# Основной цикл программы
+def main():
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        
+        # Заливка окна белым цветом
+        win.fill(WHITE)
+
+        # Рисование мухомора
+        draw_fly_amanita()
+
+        # Обновление экрана
+        pygame.display.update()
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    main()
