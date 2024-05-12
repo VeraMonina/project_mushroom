@@ -1,59 +1,46 @@
-import math
 import pygame
+import sys
+from pygame.locals import *
 
-# Инициализация Pygame
 pygame.init()
 
-# Установка размеров окна
-WIDTH, HEIGHT = 800, 600
-win = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Мухомор")
+# устанавливаем размеры окна
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption('Мухомор')
 
-# Определение цветов
-BROWN = (128, 64, 48)
-WHITE = (255, 255, 255)
 RED = (255, 0, 0)
-GREEN = (0, 255, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 128, 0)
+BLUE = (135, 206, 235)
+BEIGE = (245, 245, 220)
 
 
-# Функция рисования мухомора
-def draw_fly_amanita():
-    # Рисование травы
-    pygame.draw.rect(win, GREEN, (0, HEIGHT - 100, WIDTH, 100))
+# трава
+pygame.draw.rect(screen, GREEN, (0, 400, 800, 200))
 
-    pygame.draw.line(win, BROWN, (WIDTH // 2, HEIGHT - 200), (WIDTH // 2, HEIGHT - 50), 40)
+# небо
+pygame.draw.rect(screen, BLUE, (0, 0, 800, 400))
 
-    
+# солнце
+pygame.draw.circle(screen, (255, 255, 0), (700, 100), 50)
 
-    # Рисование красной части шляпки мухомора (полукруглая форма)
-    pygame.draw.ellipse(win, RED, (int(WIDTH / 2) - 100, HEIGHT - 400, 200, 150))
+# ножка
+pygame.draw.ellipse(screen, BEIGE, (350, 300, 100, 200))
 
-    # Рисование белых точек на красной части шляпки мухомора
-    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 - 30), HEIGHT - 370), 20)
-    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 + 30), HEIGHT - 370), 20)
-    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 - 50), HEIGHT - 300), 20)
-    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 + 50), HEIGHT - 300), 20)  
-    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 - 50), HEIGHT - 300), 20)
-    pygame.draw.circle(win, WHITE, (int(WIDTH / 2 + 50), HEIGHT - 300), 20)      
+# шляпка 
+pygame.draw.ellipse(screen, RED, (280, 240, 250, 100))
+pygame.draw.circle(screen, WHITE, (320, 290), 10)
+pygame.draw.circle(screen, WHITE, (390, 320), 10)
+#pygame.draw.circle(screen, WHITE, (405, 270), 10)
+pygame.draw.circle(screen, WHITE, (505, 278), 10)
+pygame.draw.circle(screen, WHITE, (475, 315), 10)
+pygame.draw.circle(screen, WHITE, (370, 260), 10)
+pygame.draw.circle(screen, WHITE, (430, 280), 10)
 
-# Основной цикл программы
-def main():
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        
-        # Заливка окна белым цветом
-        win.fill(WHITE)
+pygame.display.flip()
 
-        # Рисование мухомора
-        draw_fly_amanita()
-
-        # Обновление экрана
-        pygame.display.update()
-
-    pygame.quit()
-
-if __name__ == "__main__":
-    main()
+while True:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
