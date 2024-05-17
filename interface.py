@@ -4,6 +4,7 @@ import pygame
 class Drawer():
     def __init__(self, window):
         self.window = window
+        self.isdestroyed = False
 
     def _check_quit(self, event):
         if event.type == pygame.QUIT:
@@ -29,6 +30,16 @@ class Drawer():
         myimage = pygame.transform.scale(myimage, scale)
         self.window.blit(myimage, pos)
 
+    def _draw_input(self, scale, pos, text, isclicked):
+        col = Clrs.black if isclicked else Clrs.white
+        self._draw_rect('', (scale[0]+4, scale[1]+4), (pos[0]-2, pos[1]-2), 0, col)
+        self._draw_rect(text, scale, pos, 20, Clrs.lgray)
+
+    # override
+    def _set_menu(self):
+        return
+
+    # override
     def start(self):
         return
                             
@@ -56,6 +67,10 @@ class Square:
         self.x2 = pos[0] + scale[0]
         self.y2 = pos[1] + scale[1]
 
+    def contains(self, pos):
+        return self.x1 <= pos[0] <= self.x2 and \
+               self.y1 <= pos[1] <= self.y2
+
 class MainMenu(Drawer):
     def __draw_catalog_item(self, catalog, pos):
         self._draw_rect('Учить', (50, 25), pos, 14, Clrs.blue)
@@ -66,10 +81,10 @@ class MainMenu(Drawer):
     def __add_reverse_catalog(self, i):
         obj = {}
         for j in lst[i].lang:
-            obj[lst[i].lang[j]] = i
+            obj[lst[i].lang[j]] = j
         lst.append(Catalog(f'{lst[i].name} reversed', obj))
-    
-    def start(self):
+
+    def _set_menu(self):
         self.window.fill(Clrs.white)
         actions = []
         cnt = 1
@@ -80,64 +95,72 @@ class MainMenu(Drawer):
             actions.append(Square((25, 25), (854, (cnt)*30)))
             actions.append(Square((25, 25), (881, (cnt)*30)))
             cnt+=1
-        self._draw_rect('Добавить', (MyGame.SIZE[0], 50), (0, MyGame.SIZE[1]-50), 18, Clrs.white)
-        actions.append(Square((MyGame.SIZE[0], 50), (0, MyGame.SIZE[1]-50)))
-        pygame.display.flip()
-        while True:
+        self._draw_rect('Добавить', (1000, 50), (0, 550), 18, Clrs.white)
+        actions.append(Square((1000, 50), (0, 550)))
+        self._draw_image('cup.png', (30, 30), (10, 10))
+        actions.append(Square((30, 30), (10, 10)))
+        pygame.display.update()
+        return actions
+    
+    def start(self):
+        actions = self._set_menu()
+        #pygame.display.flip()
+        while not self.isdestroyed:
             for event in pygame.event.get():
                 self._check_quit(event)
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    x, y = event.pos
                     for act in range(len(actions)):
                         i = actions[act]
-                        if i.x1 <= x <= i.x2 and \
-                           i.y1 <= y <= i.y2:
-                            if act == len(actions)-1:
+                        if i.contains(event.pos):
+                            if act == len(actions)-2:
+                                self.isdestroyed = True
                                 AddCatalog(self.window).start()
                                 break
+                            if act == len(actions)-1:
+                                self.isdestroyed = True
+                                Achievements(self.window).start()
+                                break
                             if act%4 == 0:
-                                pass
+                                pass # TODO
                             if act%4 == 1:
+                                self.isdestroyed = True
                                 EditCatalog(self.window).start(act//4)
+                                break
                             if act%4 == 2:
                                 lst.pop(act//4)
-                                self.start()
-                                break
+                                self._set_menu()
                             if act%4 == 3:
                                 self.__add_reverse_catalog(act//4)
-                                self.start()
-                                break
-
+                                actions = self._set_menu()
+                            
 
 class AddCatalog(Drawer):
-    def _update_input(self, text, isclicked):
-        col = Clrs.black if isclicked else Clrs.white
-        self._draw_rect('', (404, 54), (298, 198), 0, col)
-        self._draw_rect(text, (400, 50), (300, 200), 20, Clrs.lgray)
-    
-    def start(self):
+    def _set_menu(self):
         self.window.fill(Clrs.white)
         actions = []
         self._draw_rect('Создание колоды', (200, 20), (400, 20), 24, Clrs.white)
         isclicked = False
         text = ''
-        self._update_input(text, isclicked)
+        self._draw_input((400, 50), (300, 200), text, isclicked)
         actions.append(Square((400, 50), (300, 200)))
         self._draw_rect('Сохранить', (300, 50), (350, 500), 18, Clrs.white)
         actions.append(Square((300, 50), (350, 500)))
         self._draw_image('back.png', (25, 25), (18, 18))
         actions.append(Square((25, 25), (18, 18)))
-        pygame.display.flip()
-        while True:
+        pygame.display.update()
+        return actions
+    
+    def start(self):
+        actions, text, isclicked = self._set_menu(), '', False
+        #pygame.display.flip()
+        while not self.isdestroyed:
             for event in pygame.event.get():
                 self._check_quit(event)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     isclicked = False
-                    x, y = event.pos
                     for act in range(len(actions)):
                         i = actions[act]
-                        if i.x1 <= x <= i.x2 and \
-                           i.y1 <= y <= i.y2:
+                        if i.contains(event.pos):
                             if act == 0:
                                 isclicked = True
                             if act == 1:
@@ -151,35 +174,182 @@ class AddCatalog(Drawer):
                             if act == 2:
                                 MainMenu(self.window).start()
                                 break
-                if event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN and isclicked:
                     if event.key == pygame.K_BACKSPACE:
                         text = text[:-1]
                     else:
                         text += event.unicode
-                self._update_input(text, isclicked)
+                self._draw_input((400, 50), (300, 200), text, isclicked)
                 pygame.display.update()
 
 class EditCatalog(Drawer):
-    def start(self, ind):
+    def __draw_card(self, i, j, y):
+        self._draw_rect(f'{j} - {lst[i].lang[j]}', (500, 50), (235, y), 18, Clrs.lgray)
+        self._draw_image('edit.png', (30, 30), (740, y+10))
+
+    def __set_menu(self, ind):
         self.window.fill(Clrs.white)
         actions = []
-        self._draw_rect('Редактирование колоды', (200, 20), (400, 20), 24, Clrs.white)
+        self._draw_rect(f'Редактирование колоды "{lst[ind].name}"', (1000, 20), (0, 20), 24, Clrs.white)
         self._draw_image('back.png', (25, 25), (18, 18))
         actions.append(Square((25, 25), (18, 18)))
-        pygame.display.flip()
-        while True:
+        self._draw_image('back.png', (25, 25), (900, 550))
+        actions.append(Square((25, 25), (900, 550)))
+        self._draw_image('forw.png', (25, 25), (930, 550))
+        actions.append(Square((25, 25), (930, 550)))
+        self._draw_image('plus.png', (50, 50), (475, 540))
+        actions.append(Square((50, 50), (475, 540)))
+        cnt = 1
+        for j in list(lst[ind].lang.keys())[self.offset:self.offset+8]:
+            y = 60*cnt
+            self.__draw_card(ind, j, y)
+            actions.append(Square((40, 40), (740, y+5)))
+            cnt+=1
+        pygame.display.update()
+        return actions
+    
+    def start(self, ind):
+        self.offset = 0
+        page = 0
+        actions = self.__set_menu(ind)
+        #pygame.display.flip()
+        while not self.isdestroyed:
             for event in pygame.event.get():
                 self._check_quit(event)
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    isclicked = False
-                    x, y = event.pos
                     for act in range(len(actions)):
                         i = actions[act]
-                        if i.x1 <= x <= i.x2 and \
-                           i.y1 <= y <= i.y2:
+                        if i.contains(event.pos):
+                            if act > 3:
+                                self.isdestroyed = True
+                                k = list(lst[ind].lang.keys())[act-4]
+                                EditCard(self.window).start(ind, k)
+                                break
                             if act == 0:
+                                self.isdestroyed = True
                                 MainMenu(self.window).start()
                                 break
+                            if act == 1:
+                                self.offset = max(0, self.offset-8)
+                                page = max(0, page-1)
+                                self.__set_menu(ind)
+                            if act == 2:
+                                if self.offset+8 < len(lst[ind].lang):
+                                    self.offset = min(len(lst[ind].lang), self.offset+8)
+                                    page+=1
+                                    self.__set_menu(ind)
+                            if act == 3:
+                                self.isdestroyed = True
+                                AddCard(self.window).start(ind)
+                                break
+
+
+class EditCard(Drawer):
+    def _set_menu(self, ind, word):
+        self.window.fill(Clrs.white)
+        actions = []
+        self._draw_rect('Редактирование карточки', (200, 20), (400, 20), 24, Clrs.white)
+        self._draw_image('back.png', (25, 25), (18, 18))
+        actions.append(Square((25, 25), (18, 18)))
+        isclicked = [False, False]
+        text = [word, lst[ind].lang[word]]
+        self._draw_input((400, 50), (300, 200), text[0], isclicked[0])
+        actions.append(Square((400, 50), (300, 200)))
+        self._draw_input((400, 50), (300, 300), text[1], isclicked[1])
+        actions.append(Square((400, 50), (300, 300)))
+        pygame.display.update()
+        return actions
+
+    def start(self, ind, word):
+        actions = self._set_menu(ind, word)
+        text = [word, lst[ind].lang[word]]
+        isclicked = [False, False]
+        #pygame.display.flip()
+        while not self.isdestroyed:
+            for event in pygame.event.get():
+                self._check_quit(event)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    isclicked = [False, False]
+                    for act in range(len(actions)):
+                        i = actions[act]
+                        if i.contains(event.pos):
+                            if act == 0:
+                                self.isdestroyed = True
+                                EditCatalog(self.window).start(ind)
+                                break
+                            if act == 1:
+                                isclicked = [True, False]
+                            if act == 2:
+                                isclicked = [False, True]
+                if event.type == pygame.KEYDOWN:
+                    for i in range(2):
+                        if isclicked[i]:
+                            if event.key == pygame.K_BACKSPACE:
+                                text[i] = text[i][:-1]
+                            else:
+                                text[i] += event.unicode
+                self._draw_input((400, 50), (300, 200), text[0], isclicked[0])
+                self._draw_input((400, 50), (300, 300), text[1], isclicked[1])
+                pygame.display.update()
+                            
+class AddCard(Drawer):
+    def _set_menu(self, ind):
+        self.window.fill(Clrs.white)
+        actions = []
+        self._draw_rect('Добавление карточки', (200, 20), (400, 20), 24, Clrs.white)
+        self._draw_image('back.png', (25, 25), (18, 18))
+        actions.append(Square((25, 25), (18, 18)))
+        isclicked = [False, False]
+        text = ['', '']
+        self._draw_input((400, 50), (300, 200), text[0], isclicked[0])
+        actions.append(Square((400, 50), (300, 200)))
+        self._draw_input((400, 50), (300, 300), text[1], isclicked[1])
+        actions.append(Square((400, 50), (300, 300)))
+        pygame.display.update()
+        return actions
+
+    def start(self, ind):
+        actions = self._set_menu(ind)
+        text = ['', '']
+        isclicked = [False, False]
+        #pygame.display.flip()
+        while not self.isdestroyed:
+            for event in pygame.event.get():
+                self._check_quit(event)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    isclicked = [False, False]
+                    for act in range(len(actions)):
+                        i = actions[act]
+                        if i.contains(event.pos):
+                            if act == 0:
+                                self.isdestroyed = True
+                                EditCatalog(self.window).start(ind)
+                                break
+                            if act == 1:
+                                isclicked = [True, False]
+                            if act == 2:
+                                isclicked = [False, True]
+                if event.type == pygame.KEYDOWN:
+                    for i in range(2):
+                        if isclicked[i]:
+                            if event.key == pygame.K_BACKSPACE:
+                                text[i] = text[i][:-1]
+                            else:
+                                text[i] += event.unicode
+                self._draw_input((400, 50), (300, 200), text[0], isclicked[0])
+                self._draw_input((400, 50), (300, 300), text[1], isclicked[1])
+                pygame.display.update()                            
+
+class Achievements(Drawer):
+    def _set_menu(self):
+        self.window.fill(Clrs.white)
+        # TODO
+        pygame.display.flip()
+
+    def start(self):
+        self._set_menu()
+        #pygame.display.flip()
+        
 
 class MyGame:
     SIZE = (1000, 600)
@@ -192,7 +362,7 @@ class MyGame:
     def start(self):
         self.main.start()
                 
-lst = [Catalog('Колода тест 1', {'мем': 'mem'}), Catalog('Колода тест 2', {'test': 'тест', 'something': 'что-то', 'I': 'я'}), Catalog('Колода тест 3', {'another': 'другой'})]
+lst = [Catalog('Колода тест 1', {'мем': 'mem'}), Catalog('Колода тест 2', {'test': 'тест', 'something': 'что-то', 'I': 'я', 'I1': 'я1', 'I2': 'я2', 'I3': 'я3', 'I4': 'я4', 'I5': 'я5', 'I6': 'я6', 'I7': 'я7'}), Catalog('Колода тест 3', {'another': 'другой'})]
 game = MyGame()
 game.start()
 
