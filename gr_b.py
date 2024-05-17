@@ -14,15 +14,17 @@ class Card:
         self.nxt_rep = nxt_rep
     def update_nxt_rep(self):
         if self.stage == 1 and self.substage == 1:
-            self.nxt_rep == datetime.now()
+            self.nxt_rep = datetime.now()
         elif self.stage == 1:
-            self.nxt_rep == datetime.now() + timedelta(minutes=20)
+            print(self.nxt_rep, 'OLD, IN METHOD')
+            self.nxt_rep = datetime.now() + timedelta(hours=1)
+            print(self.nxt_rep, 'NEW, IN METHOD')
         elif self.stage == 2:
-            self.nxt_rep == datetime.now() + timedelta(hours=8)
+            self.nxt_rep = datetime.now() + timedelta(hours=8)
         elif self.stage == 3:
-            self.nxt_rep == datetime.now() + timedelta(days=1)
+            self.nxt_rep = datetime.now() + timedelta(days=1)
         elif self.stage == 4:
-            self.nxt_rep == datetime.now() + timedelta(days=3)
+            self.nxt_rep = datetime.now() + timedelta(days=3)
         else:
             self.nxt_rep == datetime.now() + timedelta(weeks=1)
     def update_stage(self, progr):
@@ -79,8 +81,8 @@ class Deck:
                 print(curr_card.averse)
                 if input().lower() == curr_card.reverse.lower():
                     print('correct')
+                    curr_card.update_nxt_rep() #так как я меняю местами обновления, количество подстадий должно быть меньше на 1 !!!
                     curr_card.update_substage(True)
-                    curr_card.update_nxt_rep()
                     if curr_card.stage == 1 and curr_card.substage == 1:
                         game_deck.put(curr_card)
                     else:
@@ -90,12 +92,12 @@ class Deck:
                     curr_card.update_substage(False)
                     curr_card.nxt_rep = datetime.now()
                     game_deck.put(curr_card)
-        for card in self.card_set:
-            print('updating data') #отладка
-            card_data = (card.averse, card.reverse)
-            new_stage, new_substage, new_nxt_rep = played[card_data]
-            print(new_stage, new_substage, new_nxt_rep, 'new data') #отладка
-            card.edit_state(new_stage, new_substage, new_nxt_rep)
+        if len(self.card_set) != 0:
+            for card in self.card_set:
+                card_data = (card.averse, card.reverse)
+                print(self.card_set)
+                new_stage, new_substage, new_nxt_rep = played[card_data] #не понимаю в чём проблема
+                card.edit_state(new_stage, new_substage, new_nxt_rep)
         print('no more cards, wanna study some more?')
         answer = input()
         if answer == 'yes':
