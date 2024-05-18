@@ -115,27 +115,27 @@ def upload_information():
     with open('all_data.tsv', 'r') as f: #получаем информацию о колодах и карточках, чтобы их проинтициализировать и вывести на экран
         reader = csv.DictReader(f, delimiter='\t')
         for dictionary in reader:
-            deck_name, averse, reverse, stage, nxt_rep = reader['Deck name'], reader['Averse'], reader['Reverse'], reader['Stage'], reader['Next repeat']
+            deck_name, averse, reverse, stage, nxt_rep = dictionary['Deck name'], dictionary['Averse'], dictionary['Reverse'], dictionary['Stage'], dictionary['Next repeat']
             new_card = Card(averse, reverse, stage, nxt_rep)
             for deck in super_deck:
                 if deck.name == deck_name:
-                    deck.card_list.add(new_card)
+                    deck.card_list.append(new_card)
                     break
             else:
                 super_deck.append(Deck(deck_name, [new_card]))
     
     with open('achievements.txt', 'r') as f: #получаем информацию о достижениях
-        learned_cards = int(f.readline())    
+        learned_cards = int(f.readline())
 
 def download_information():
     with open('all_data.tsv', 'w') as f: #сохраняем всю информацию о колодах и карточках
         f.write('Deck name' + '\t' + 'Averse' + '\t' + 'Reverse' + '\t' + 'Stage' + '\t' + 'Next repeat')
         for deck in super_deck:
-            for card in deck:
-                f.write(deck.name + '\t' + card.averse + '\t' + card.reverse + '\t' + card.stage + '\t' + card.nxt_rep + '\n')
+            for card in deck.card_list:
+                f.write(deck.name + '\t' + card.averse + '\t' + card.reverse + '\t' + str(card.stage) + '\t' + str(card.nxt_rep) + '\n')
     
     with open('achievements.txt', 'w') as f: #сохраняем информацию о достижениях
-        f.write(learned_cards)
+        f.write(str(learned_cards))
 
 class Drawer():
     def __init__(self, window):
@@ -215,9 +215,9 @@ class MainMenu(Drawer):
     
     def __draw_catalog_item(self, catalog, pos):
         self._draw_rect('Учить', (50, 25), pos, 14, Clrs.blue)
-        self._draw_rect(catalog.name, (700, 25), (pos[0]+52, pos[1]), 16, Clrs.lgray)
-        self._draw_image('trashcan.jpg', (25, 25), (pos[0]+754, pos[1]))
-        self._draw_image('refresh.png', (25, 25), (pos[0]+781, pos[1]))
+        self._draw_rect(catalog.name, (700, 25), (pos[0] + 52, pos[1]), 16, Clrs.lgray)
+        self._draw_image('trashcan.jpg', (25, 25), (pos[0] + 754, pos[1]))
+        self._draw_image('refresh.png', (25, 25), (pos[0] + 781, pos[1]))
 
     def _set_menu(self):
         self.window.fill(Clrs.white)
@@ -327,7 +327,7 @@ class EditDeck(Drawer):
                 reverse = card.reverse
                 break
         self._draw_rect(f'{j} - {reverse}', (500, 50), (235, y), 18, Clrs.lgray)
-        self._draw_image('edit.png', (30, 30), (740, y+10))
+        self._draw_image('edit.png', (30, 30), (740, y + 10))
 
     def __set_menu(self, ind):
         self.window.fill(Clrs.white)
