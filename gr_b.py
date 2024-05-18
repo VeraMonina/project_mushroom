@@ -50,8 +50,7 @@ class Card:
     def edit_reverse(self, new_reverse):
         self.reverse = new_reverse
 
-    def edit_state(self, new_stage,
-                   new_nxt_rep):  # это запрещённая техника, нужно ли прятать? или нужно или сливать с update-ами?
+    def edit_state(self, new_stage, new_nxt_rep):
         self.stage = new_stage
         self.nxt_rep = new_nxt_rep
 
@@ -71,25 +70,31 @@ class Deck:
         for curr_card in self.card_list:
             while True:  # может это тоже неоч?
                 print(curr_card.averse)  # ЗАМЕНА: ФРОНТ ВЫВОД АВЕРСА КАРТОЧКИ
-                if input().lower() == curr_card.reverse.lower():  # возможно инпут поменять на тамошнее что-то
-                    print('correct')  # ЗАМЕНА: ФРОНТ ВЫВОД СООБЩЕНИЯ 'Правильно'
+                if input().lower() == curr_card.reverse.lower():
+                    # возможно инпут поменять на тамошнее что-то
+                    print('correct')
+                    # ЗАМЕНА: ФРОНТ ВЫВОД СООБЩЕНИЯ 'Правильно'
                     break
                 else:
-                    print('incorrect, ' + curr_card.reverse)  # ЗАМЕНА: ФРОНТ ВЫВОД 'Неправильно, ' + РЕВЕРС КАРТОЧКИ
+                    print('incorrect, ' + curr_card.reverse)
+                    # ЗАМЕНА: ФРОНТ ВЫВОД 'Неправильно, ' + РЕВЕРС КАРТОЧКИ
 
     def play(self):
-        game_deck = My_Queue()  # узнать про prioritized queue и возможно её и сделать
-        played = {}  # проверить нельзя ли вообще убрать этот play
+        game_deck = My_Queue()
+        played = {}
         for card in self.card_list:
             if card.nxt_rep <= datetime.now():
                 game_deck.put(card)
         while game_deck.size() > 0:
             curr_card = game_deck.get()
             if curr_card.nxt_rep > datetime.now():
-                played[(averse, reverse)] = (curr_card.stage, curr_card.nxt_rep)  # это вообще нормально?
+                played[(averse, reverse)] = (curr_card.stage,
+                                             curr_card.nxt_rep)
+                # это вообще нормально?
 
             elif curr_card.stage == 1:
-                print(curr_card.averse, curr_card.reverse, sep=' - ')  # ЗАМЕНА: ВЫВОД В ФОРМАТЕ АВЕРС - РЕВЕРС
+                print(curr_card.averse, curr_card.reverse, sep=' - ')
+                # ЗАМЕНА: ВЫВОД В ФОРМАТЕ АВЕРС - РЕВЕРС
                 curr_card.update_stage(True)
                 curr_card.update_nxt_rep()
                 game_deck.put(curr_card)
@@ -104,9 +109,11 @@ class Deck:
                     if curr_card.stage <= 3:
                         game_deck.put(curr_card)
                     else:
-                        played[(curr_card.averse, curr_card.reverse)] = (curr_card.stage, curr_card.nxt_rep)
+                        played[(curr_card.averse, curr_card.reverse)] \
+                            = (curr_card.stage, curr_card.nxt_rep)
                 else:
-                    print('incorrect, ' + curr_card.reverse)  # ЗАМЕНА: ВЫВОД 'Неправильно, ' + РЕВЕРС КАРТОЧКИ
+                    print('incorrect, ' + curr_card.reverse)
+                    # ЗАМЕНА: ВЫВОД 'Неправильно, ' + РЕВЕРС КАРТОЧКИ
                     curr_card.update_stage(False)
                     curr_card.nxt_rep = datetime.now()
                     game_deck.put(curr_card)
@@ -116,8 +123,11 @@ class Deck:
                 new_stage, new_nxt_rep = played[card_data]
                 card.edit_state(new_stage, new_nxt_rep)
         print(
-            'no more cards, wanna study some more?')  # ЗАМЕНА: ВЫВОД 'Нет карточек для повторения. Хотите позаниматься дополнительно?'
-        answer = input()  # ЗАМЕНА: кнопки 'Да' и 'Нет'. Если нажал да, то self.extra_rep(), если нет, то на главный экран.
+            'no more cards, wanna study some more?')  # ЗАМЕНА:
+        # ВЫВОД 'Нет карточек для повторения.
+        # Хотите позаниматься дополнительно?'
+        answer = input()  # ЗАМЕНА: кнопки 'Да' и 'Нет'.
+        # Если нажал да, то self.extra_rep(), если нет, то на главный экран.
         if answer == 'yes':  # тут тоже, соответственно
             self.extra_rep()
 
@@ -131,11 +141,15 @@ def count_achievements():
 
 def upload_information():
     with open('all_data.tsv',
-              'r') as f:  # получаем информацию о колодах и карточках, чтобы их проинтициализировать и вывести на экран
+              'r') as f:
+        # получаем информацию о колодах и карточках,
+        # чтобы их проинтициализировать и вывести на экран
         reader = csv.DictReader(f, delimiter='\t')
         for dictionary in reader:
-            deck_name, averse, reverse, stage, nxt_rep = dictionary['Deck name'], dictionary['Averse'], dictionary[
-                'Reverse'], dictionary['Stage'], dictionary['Next repeat']
+            deck_name, averse, reverse, stage, nxt_rep = \
+              dictionary['Deck name'], dictionary['Averse'],
+            dictionary['Reverse'], dictionary['Stage'],
+            dictionary['Next repeat']
             print(deck_name, averse, reverse, stage, nxt_rep)
             new_card = Card(averse, reverse, stage, nxt_rep)
             finded = False
@@ -147,21 +161,28 @@ def upload_information():
             if not finded:
                 super_deck.append(Deck(deck_name, [new_card]))
 
-    with open('achievements.txt', 'r') as f:  # получаем информацию о достижениях
+    with open('achievements.txt', 'r') as f:
+        # получаем информацию о достижениях
         learned_cards = int(f.readline())
 
 
 def download_information():
-    with open('all_data.tsv', 'w') as f:  # сохраняем всю информацию о колодах и карточках
-        f.write('Deck name' + '\t' + 'Averse' + '\t' + 'Reverse' + '\t' + 'Stage' + '\t' + 'Next repeat' + '\n')
+    with open('all_data.tsv', 'w') as f:
+        # сохраняем всю информацию о колодах и карточках
+        f.write(
+            'Deck name' + '\t' + 'Averse' + '\t' +
+            'Reverse' + '\t' + 'Stage' + '\t' + 'Next repeat' + '\n')
         for deck in super_deck:
-            for card in deck.card_list:  # если в колоде нет карточек, то она удаляется???
-                f.write(deck.name + '\t' + card.averse + '\t' + card.reverse + '\t' + str(card.stage) + '\t' + str(
-                    card.nxt_rep) + '\n')
-                print(deck.name + '\t' + card.averse + '\t' + card.reverse + '\t' + str(card.stage) + '\t' + str(
-                    card.nxt_rep) + '\n')
+            for card in deck.card_list:
+                f.write(deck.name + '\t' +
+                        card.averse + '\t' + card.reverse + '\t' +
+                        str(card.stage) + '\t' + str(card.nxt_rep) + '\n')
+                print(deck.name + '\t' + card.averse + '\t' +
+                      card.reverse + '\t' + str(card.stage) + '\t' +
+                      str(card.nxt_rep) + '\n')
 
-    with open('achievements.txt', 'w') as f:  # сохраняем информацию о достижениях
+    with open('achievements.txt', 'w') as f:
+        # сохраняем информацию о достижениях
         f.write(str(learned_cards))
 
 
@@ -177,7 +198,8 @@ class Drawer():
             exit()
 
     def _render_font(self, text, sz):
-        return pygame.font.SysFont('Verdana', sz).render(text, True, Clrs.black)
+        return pygame.font.SysFont('Verdana', sz).\
+            render(text, True, Clrs.black)
 
     def _draw_rect(self, text, scale, pos, sz, color):
         button_rect = pygame.Rect(pos, scale)
@@ -197,7 +219,8 @@ class Drawer():
 
     def _draw_input(self, scale, pos, text, isclicked):
         col = Clrs.black if isclicked else Clrs.white
-        self._draw_rect('', (scale[0] + 4, scale[1] + 4), (pos[0] - 2, pos[1] - 2), 0, col)
+        self._draw_rect('', (scale[0] + 4, scale[1] + 4),
+                        (pos[0] - 2, pos[1] - 2), 0, col)
         self._draw_rect(text, scale, pos, 20, Clrs.lgray)
 
     # override
@@ -244,8 +267,10 @@ class MainMenu(Drawer):
 
     def __draw_catalog_item(self, catalog, pos):
         self._draw_rect('Учить', (50, 25), pos, 14, Clrs.blue)
-        self._draw_rect(catalog.name, (700, 25), (pos[0] + 52, pos[1]), 16, Clrs.lgray)
-        self._draw_image('trashcan.jpg', (25, 25), (pos[0] + 754, pos[1]))  # ИКОНКА УДАЛЕНИЯ
+        self._draw_rect(catalog.name, (700, 25),
+                        (pos[0] + 52, pos[1]), 16, Clrs.lgray)
+        self._draw_image('trashcan.jpg', (25, 25),
+                         (pos[0] + 754, pos[1]))  # ИКОНКА УДАЛЕНИЯ
         # self._draw_image('refresh.png', (25, 25), (pos[0]+781, pos[1]))
 
     def _set_menu(self):
@@ -302,7 +327,8 @@ class AddDeck(Drawer):
     def _set_menu(self):
         self.window.fill(Clrs.white)
         actions = []
-        self._draw_rect('Создание колоды', (200, 20), (400, 20), 24, Clrs.white)
+        self._draw_rect('Создание колоды',
+                        (200, 20), (400, 20), 24, Clrs.white)
         isclicked = False
         text = ''
         self._draw_input((400, 50), (300, 200), text, isclicked)
@@ -329,8 +355,9 @@ class AddDeck(Drawer):
                                 isclicked = True
                             if act == 1:
                                 if len(text) == 0:
-                                    self._draw_rect('Поле не должно быть пустым',
-                                                    (250, 40), (375, 400), 14, Clrs.gray)
+                                    self._draw_rect('Пустое поле',
+                                                    (250, 40), (375, 400),
+                                                    14, Clrs.gray)
                                 else:
                                     super_deck.append(Deck(text, []))
                                     MainMenu(self.window).start()
@@ -351,14 +378,16 @@ class AddDeck(Drawer):
 
 class EditDeck(Drawer):
     def __draw_card(self, card, y):
-        self._draw_rect(f'{card.averse} - {card.reverse}', (500, 50), (235, y), 18, Clrs.lgray)
+        self._draw_rect(f'{card.averse} - {card.reverse}',
+                        (500, 50), (235, y), 18, Clrs.lgray)
         self._draw_image('edit.png', (30, 30), (740, y + 10))
         self._draw_image('trashcan.jpg', (30, 30), (780, y + 10))
 
     def __set_menu(self, ind):
         self.window.fill(Clrs.white)
         actions = []
-        self._draw_rect(f'Редактирование колоды "{super_deck[ind].name}"', (1000, 20), (0, 20), 24, Clrs.white)
+        self._draw_rect(f'Редактирование колоды "{super_deck[ind].name}"',
+                        (1000, 20), (0, 20), 24, Clrs.white)
         self._draw_image('back.png', (25, 25), (18, 18))
         actions.append(Square((25, 25), (18, 18)))
         self._draw_image('back.png', (25, 25), (900, 550))
@@ -392,10 +421,12 @@ class EditDeck(Drawer):
                             if act > 3:
                                 if act % 2 == 0:
                                     self.isdestroyed = True
-                                    EditCard(self.window).start(ind, page * 8 + (act - 4) // 2)
+                                    EditCard(self.window).\
+                                        start(ind, page * 8 + (act - 4) // 2)
                                     break
                                 else:  # удаление карточки
-                                    super_deck[ind].card_list.pop((act - 4) // 2)
+                                    super_deck[ind].\
+                                        card_list.pop((act - 4) // 2)
                                     self.__set_menu(ind)
                             if act == 0:
                                 self.isdestroyed = True
@@ -406,8 +437,11 @@ class EditDeck(Drawer):
                                 page = max(0, page - 1)
                                 self.__set_menu(ind)
                             if act == 2:
-                                if self.offset + 8 < len(super_deck[ind].card_list):
-                                    self.offset = min(len(super_deck[ind].card_list), self.offset + 8)
+                                if self.offset + 8 < len(super_deck[ind].
+                                                         card_list):
+                                    self.offset = \
+                                        min(len(super_deck[ind].card_list),
+                                            self.offset + 8)
                                     page += 1
                                     self.__set_menu(ind)
                             if act == 3:
@@ -420,7 +454,8 @@ class AddCard(Drawer):
     def _set_menu(self, ind):
         self.window.fill(Clrs.white)
         actions = []
-        self._draw_rect('Добавление карточки', (200, 20), (400, 20), 24, Clrs.white)
+        self._draw_rect('Добавление \
+                        карточки', (200, 20), (400, 20), 24, Clrs.white)
         self._draw_image('back.png', (25, 25), (18, 18))
         actions.append(Square((25, 25), (18, 18)))
         isclicked = [False, False]
@@ -457,10 +492,13 @@ class AddCard(Drawer):
                                 isclicked = [False, True]
                             if act == 3:
                                 if len(text[0]) == 0 or len(text[1]) == 0:
-                                    self._draw_rect('Поля не должны быть пустыми',
-                                                    (250, 40), (375, 450), 14, Clrs.gray)
+                                    self._draw_rect('Пустое поле',
+                                                    (250, 40), (375, 450),
+                                                    14, Clrs.gray)
                                 else:
-                                    super_deck[ind].add_card(Card(text[0], text[1], 1, datetime.now()))
+                                    super_deck[ind].\
+                                        add_card(Card(text[0], text[1], 1,
+                                                      datetime.now()))
                                     self.isdestroyed = True
                                     EditDeck(self.window).start(ind)
                                     break
@@ -481,7 +519,8 @@ class EditCard(Drawer):
         self.window.fill(Clrs.white)
         card = super_deck[ind].card_list[iword]
         actions = []
-        self._draw_rect('Редактирование карточки', (200, 20), (400, 20), 24, Clrs.white)
+        self._draw_rect('Редактирование карточки', (200, 20),
+                        (400, 20), 24, Clrs.white)
         self._draw_image('back.png', (25, 25), (18, 18))
         actions.append(Square((25, 25), (18, 18)))
         isclicked = [False, False]
@@ -519,10 +558,14 @@ class EditCard(Drawer):
                                 isclicked = [False, True]
                             if act == 3:
                                 if len(text[0]) == 0 or len(text[1]) == 0:
-                                    self._draw_rect('Поля не должны быть пустыми',
-                                                    (250, 40), (375, 450), 14, Clrs.gray)
+                                    self._draw_rect('Пустое поле',
+                                                    (250, 40),
+                                                    (375, 450), 14, Clrs.gray)
                                 else:
-                                    super_deck[ind].card_list[iword] = Card(text[0], text[1], 1, datetime.now())
+                                    super_deck[ind].\
+                                        card_list[iword] = Card(text[0],
+                                                                text[1], 1,
+                                                                datetime.now())
                                     self.isdestroyed = True
                                     EditDeck(self.window).start(ind)
                                     break
@@ -565,10 +608,18 @@ class Achievements(Drawer):
         clock = pygame.time.Clock()
 
         def star(x, x1, y1, a, b, c, d, e):
-            pygame.draw.lines(screen, orange, True, ((x1, y1), (x + a, y1), (x - b, y1 - e), (x1 + d, y1)), 7)
-            pygame.draw.lines(screen, orange, True, ((x1 + d, y1 + d), (x1 + c, y1 - e), (x1, y1), (x1 + d, y1)), 7)
-            pygame.draw.polygon(screen, yellow, ((x1, y1), (x + a, y1), (x - b, y1 - e), (x1 + d, y1)))
-            pygame.draw.polygon(screen, yellow, ((x1 + d, y1 + d), (x1 + c, y1 - e), (x1, y1), (x1 + d, y1)))
+            pygame.draw.lines(screen, orange, True,
+                              ((x1, y1), (x + a, y1),
+                               (x - b, y1 - e), (x1 + d, y1)), 7)
+            pygame.draw.lines(screen, orange, True,
+                              ((x1 + d, y1 + d), (x1 + c, y1 - e),
+                               (x1, y1), (x1 + d, y1)), 7)
+            pygame.draw.polygon(screen, yellow,
+                                ((x1, y1), (x + a, y1),
+                                 (x - b, y1 - e), (x1 + d, y1)))
+            pygame.draw.polygon(screen, yellow,
+                                ((x1 + d, y1 + d), (x1 + c, y1 - e),
+                                    (x1, y1), (x1 + d, y1)))
 
         while True:
             clock.tick(FPS)
@@ -587,7 +638,6 @@ class Achievements(Drawer):
                 quit(screen)
             pygame.display.update()
             pygame.display.flip()
-        #грибы
         pygame.init()
 
         # размер окна
@@ -682,7 +732,8 @@ class Achievements(Drawer):
         elif count_achievements() == 200:
             def reward_chanterelles_1():
                 mush_chan_surf = pg.image.load('ach_pics/lis.bmp').convert()
-                mush_chan_rect = mush_chan_surf.get_rect(bottomright=(700, 550))
+                mush_chan_rect = \
+                    mush_chan_surf.get_rect(bottomright=(700, 550))
                 mush_chan_surf.set_colorkey((0, 0, 0))
                 screen.blit(mush_chan_surf, mush_chan_rect)
                 pg.display.update()
@@ -690,7 +741,8 @@ class Achievements(Drawer):
         elif count_achievements() == 250:
             def reward_chanterelles_2():
                 mush_chan_surf = pg.image.load('ach_pics/lis.bmp').convert()
-                mush_chan_rect = mush_chan_surf.get_rect(bottomright=(700, 550))
+                mush_chan_rect = \
+                    mush_chan_surf.get_rect(bottomright=(700, 550))
                 mush_chan_surf.set_colorkey((0, 0, 0))
                 screen.blit(mush_chan_surf, mush_chan_rect)
                 pg.display.update()
@@ -706,7 +758,8 @@ class Achievements(Drawer):
         elif count_achievements() == 300:
             def reward_chanterelles_3():
                 mush_chan_surf = pg.image.load('lis.bmp').convert()
-                mush_chan_rect = mush_chan_surf.get_rect(bottomright=(700, 550))
+                mush_chan_rect = \
+                    mush_chan_surf.get_rect(bottomright=(700, 550))
                 mush_chan_surf.set_colorkey((0, 0, 0))
                 screen.blit(mush_chan_surf, mush_chan_rect)
                 pg.display.update()
@@ -729,31 +782,37 @@ class Achievements(Drawer):
                 return reward_chanterelles_3
         elif count_achievements() == 350:
             def reward_white_mush_1():
-                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
+                mush_white_surf = \
+                    pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 1.5,
                                       mush_white_surf.get_height() // 1.5))
-                mush_white_rect = mush_white_surf.get_rect(bottomright=(870, 700))
+                mush_white_rect = \
+                    mush_white_surf.get_rect(bottomright=(870, 700))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
                 return reward_white_mush_1
         elif count_achievements() == 400:
             def reward_white_mush_2():
-                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
+                mush_white_surf = \
+                    pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 1.5,
                                       mush_white_surf.get_height() // 1.5))
-                mush_white_rect = mush_white_surf.get_rect(bottomright=(870, 700))
+                mush_white_rect = \
+                    mush_white_surf.get_rect(bottomright=(870, 700))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
 
-                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
+                mush_white_surf = \
+                    pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 3,
                                       mush_white_surf.get_height() // 3))
-                mush_white_rect = mush_white_surf.get_rect(bottomright=(690, 900))
+                mush_white_rect = \
+                    mush_white_surf.get_rect(bottomright=(690, 900))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
@@ -762,109 +821,131 @@ class Achievements(Drawer):
         elif count_achievements() == 450:
             def reward_white_mush_3():
 
-                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
+                mush_white_surf = \
+                    pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 1.5,
                                       mush_white_surf.get_height() // 1.5))
-                mush_white_rect = mush_white_surf.get_rect(bottomright=(870, 700))
+                mush_white_rect = \
+                    mush_white_surf.get_rect(bottomright=(870, 700))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
 
-                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
+                mush_white_surf = \
+                    pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 3,
                                       mush_white_surf.get_height() // 3))
-                mush_white_rect = mush_white_surf.get_rect(bottomright=(690, 900))
+                mush_white_rect = \
+                    mush_white_surf.get_rect(bottomright=(690, 900))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
                 pygame.time.wait(1000)
-                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
+                mush_white_surf = \
+                    pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 2,
                                       mush_white_surf.get_height() // 2))
-                mush_white_rect = mush_white_surf.get_rect(bottomright=(1200, 850))
+                mush_white_rect = \
+                    mush_white_surf.get_rect(bottomright=(1200, 850))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
                 return reward_white_mush_3
         elif count_achievements() == 500:
             def reward_honey_mush_1():
-                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
+                mush_honey_surf = \
+                    pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 2.5,
                                       mush_honey_surf.get_height() // 2.5))
-                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1400, 1000))
+                mush_honey_rect = \
+                    mush_honey_surf.get_rect(bottomright=(1400, 1000))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
                 return reward_honey_mush_1
         elif count_achievements() == 550:
             def reward_honey_mush_2():
-                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
+                mush_honey_surf = \
+                    pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 2.5,
                                       mush_honey_surf.get_height() // 2.5))
-                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1400, 1000))
+                mush_honey_rect = \
+                    mush_honey_surf.get_rect(bottomright=(1400, 1000))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
 
-                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
+                mush_honey_surf = \
+                    pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 4,
                                       mush_honey_surf.get_height() // 4))
-                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1200, 1125))
+                mush_honey_rect = \
+                    mush_honey_surf.get_rect(bottomright=(1200, 1125))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
                 return reward_honey_mush_2
         elif count_achievements() == 600:
             def reward_honey_mush_3():
-                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
+                mush_honey_surf = \
+                    pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 2.5,
                                       mush_honey_surf.get_height() // 2.5))
-                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1400, 1000))
+                mush_honey_rect = \
+                    mush_honey_surf.get_rect(bottomright=(1400, 1000))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
 
-                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
+                mush_honey_surf = \
+                    pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 4,
                                       mush_honey_surf.get_height() // 4))
-                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1200, 1125))
+                mush_honey_rect = \
+                    mush_honey_surf.get_rect(bottomright=(1200, 1125))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
 
-                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
+                mush_honey_surf = \
+                    pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 3,
                                       mush_honey_surf.get_height() // 3))
-                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1700, 1105))
+                mush_honey_rect = \
+                    mush_honey_surf.get_rect(bottomright=(1700, 1105))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
                 return reward_honey_mush_3
         elif count_achievements() == 650:
             def reward_all():
-                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
+                mush_honey_surf = \
+                    pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 4,
                                       mush_honey_surf.get_height() // 4))
-                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1860, 1145))
+                mush_honey_rect = \
+                    mush_honey_surf.get_rect(bottomright=(1860, 1145))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
 
-                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
+                mush_white_surf = pg.image.load('ach_pics/white4.bmp').\
+                    convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 3,
                                       mush_white_surf.get_height() // 3))
-                mush_white_rect = mush_white_surf.get_rect(bottomright=(670, 850))
+                mush_white_rect = \
+                    mush_white_surf.get_rect(bottomright=(670, 850))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
@@ -873,7 +954,8 @@ class Achievements(Drawer):
                 scale = pygame.transform.scale(
                     mush_chan_surf, (mush_chan_surf.get_width() // 1.3,
                                      mush_chan_surf.get_height() // 1.3))
-                mush_chan_rect = mush_chan_surf.get_rect(bottomright=(580, 680))
+                mush_chan_rect = \
+                    mush_chan_surf.get_rect(bottomright=(580, 680))
                 scale.set_colorkey((0, 0, 0))
                 screen.blit(scale, mush_chan_rect)
                 pg.display.update()
@@ -884,14 +966,9 @@ class Achievements(Drawer):
                 screen.blit(mush_fly_surf, mush_fly_rect)
                 pg.display.update()
                 return reward_all
-        # и так доделать для остальных, последний случай - >= сколько-то, а не только само это число
+        # и так доделать для остальных, последний случай - >=
+        # сколько-то, а не только само это число
         pygame.display.flip()
-
-    def start(self):
-        self._set_menu()
-        # pygame.display.flip()
-
-
 
     def start(self):
         self._set_menu()
