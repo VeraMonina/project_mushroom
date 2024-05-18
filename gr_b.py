@@ -3,9 +3,11 @@ from queue import *
 import pygame
 import csv
 
+
 class My_Queue(Queue):
     def size(self):
         return len(self.queue)
+
 
 class Card:
     def __init__(self, averse, reverse, stage, nxt_rep):
@@ -13,6 +15,7 @@ class Card:
         self.reverse = reverse
         self.stage = stage
         self.nxt_rep = nxt_rep
+
     def update_nxt_rep(self):
         if self.stage <= 3:
             self.nxt_rep = datetime.now()
@@ -26,6 +29,7 @@ class Card:
             self.nxt_rep = datetime.now() + timedelta(days=3)
         else:
             self.nxt_rep == datetime.now() + timedelta(weeks=1)
+
     def update_stage(self, progr):
         if progr and self.stage == 7:
             self.stage += 1
@@ -37,61 +41,70 @@ class Card:
             learned_cards -= 1
         elif not progr and self.stage > 3:
             self.stage -= 1
+
     def edit_averse(self, new_averse):
         self.averse = new_awerse
+
     def edit_reverse(self, new_reverse):
         self.reverse = new_reverse
-    def edit_state(self, new_stage, new_nxt_rep): #это запрещённая техника, нужно ли прятать? или нужно или сливать с update-ами?
+
+    def edit_state(self, new_stage,
+                   new_nxt_rep):  # это запрещённая техника, нужно ли прятать? или нужно или сливать с update-ами?
         self.stage = new_stage
         self.nxt_rep = new_nxt_rep
+
 
 class Deck:
     def __init__(self, name, card_list):
         self.name = name
         self.card_list = card_list
+
     def add_card(self, new_card):
         self.card_list.append(new_card)
+
     def remove_card(self, target_card):
         self.card_list.remove(target_card)
+
     def extra_rep(self):
         for curr_card in self.card_list:
-            while True: #может это тоже неоч?
-                print(curr_card.averse) #ЗАМЕНА: ФРОНТ ВЫВОД АВЕРСА КАРТОЧКИ
-                if input().lower() == curr_card.reverse.lower(): #возможно инпут поменять на тамошнее что-то
-                    print('correct') #ЗАМЕНА: ФРОНТ ВЫВОД СООБЩЕНИЯ 'Правильно'
+            while True:  # может это тоже неоч?
+                print(curr_card.averse)  # ЗАМЕНА: ФРОНТ ВЫВОД АВЕРСА КАРТОЧКИ
+                if input().lower() == curr_card.reverse.lower():  # возможно инпут поменять на тамошнее что-то
+                    print('correct')  # ЗАМЕНА: ФРОНТ ВЫВОД СООБЩЕНИЯ 'Правильно'
                     break
                 else:
-                    print('incorrect, ' + curr_card.reverse) #ЗАМЕНА: ФРОНТ ВЫВОД 'Неправильно, ' + РЕВЕРС КАРТОЧКИ  
+                    print('incorrect, ' + curr_card.reverse)  # ЗАМЕНА: ФРОНТ ВЫВОД 'Неправильно, ' + РЕВЕРС КАРТОЧКИ
+
     def play(self):
-        game_deck = My_Queue() #узнать про prioritized queue и возможно её и сделать
-        played = {} #проверить нельзя ли вообще убрать этот play
+        game_deck = My_Queue()  # узнать про prioritized queue и возможно её и сделать
+        played = {}  # проверить нельзя ли вообще убрать этот play
         for card in self.card_list:
             if card.nxt_rep <= datetime.now():
                 game_deck.put(card)
         while game_deck.size() > 0:
             curr_card = game_deck.get()
             if curr_card.nxt_rep > datetime.now():
-                played[(averse, reverse)] = (curr_card.stage, curr_card.nxt_rep) #это вообще нормально?
-                
+                played[(averse, reverse)] = (curr_card.stage, curr_card.nxt_rep)  # это вообще нормально?
+
             elif curr_card.stage == 1:
-                print(curr_card.averse, curr_card.reverse, sep=' - ') #ЗАМЕНА: ВЫВОД В ФОРМАТЕ АВЕРС - РЕВЕРС
+                print(curr_card.averse, curr_card.reverse, sep=' - ')  # ЗАМЕНА: ВЫВОД В ФОРМАТЕ АВЕРС - РЕВЕРС
                 curr_card.update_stage(True)
                 curr_card.update_nxt_rep()
                 game_deck.put(curr_card)
                 if input():
                     continue
             else:
-                print(curr_card.averse) #ЗАМЕНА: ВЫВОД АВЕРСА
+                print(curr_card.averse)  # ЗАМЕНА: ВЫВОД АВЕРСА
                 if input().lower() == curr_card.reverse.lower():
-                    print('correct') #ЗАМЕНА: ВЫВОД 'Правильно'
+                    print('correct')  # ЗАМЕНА: ВЫВОД 'Правильно'
                     curr_card.update_stage(True)
-                    curr_card.update_nxt_rep() 
+                    curr_card.update_nxt_rep()
                     if curr_card.stage <= 3:
                         game_deck.put(curr_card)
                     else:
                         played[(curr_card.averse, curr_card.reverse)] = (curr_card.stage, curr_card.nxt_rep)
                 else:
-                    print('incorrect, ' + curr_card.reverse) #ЗАМЕНА: ВЫВОД 'Неправильно, ' + РЕВЕРС КАРТОЧКИ
+                    print('incorrect, ' + curr_card.reverse)  # ЗАМЕНА: ВЫВОД 'Неправильно, ' + РЕВЕРС КАРТОЧКИ
                     curr_card.update_stage(False)
                     curr_card.nxt_rep = datetime.now()
                     game_deck.put(curr_card)
@@ -100,42 +113,55 @@ class Deck:
                 card_data = (card.averse, card.reverse)
                 new_stage, new_nxt_rep = played[card_data]
                 card.edit_state(new_stage, new_nxt_rep)
-        print('no more cards, wanna study some more?') #ЗАМЕНА: ВЫВОД 'Нет карточек для повторения. Хотите позаниматься дополнительно?'
-        answer = input() #ЗАМЕНА: кнопки 'Да' и 'Нет'. Если нажал да, то self.extra_rep(), если нет, то на главный экран.
-        if answer == 'yes': #тут тоже, соответственно
+        print(
+            'no more cards, wanna study some more?')  # ЗАМЕНА: ВЫВОД 'Нет карточек для повторения. Хотите позаниматься дополнительно?'
+        answer = input()  # ЗАМЕНА: кнопки 'Да' и 'Нет'. Если нажал да, то self.extra_rep(), если нет, то на главный экран.
+        if answer == 'yes':  # тут тоже, соответственно
             self.extra_rep()
 
-#буду делать файлик
-#надо ли запретить его редактирование???
-            
+
+# буду делать файлик
+# надо ли запретить его редактирование???
+
 def count_achievements():
     return learned_cards - (learned_cards % 50)
 
+
 def upload_information():
-    with open('all_data.tsv', 'r') as f: #получаем информацию о колодах и карточках, чтобы их проинтициализировать и вывести на экран
+    with open('all_data.tsv',
+              'r') as f:  # получаем информацию о колодах и карточках, чтобы их проинтициализировать и вывести на экран
         reader = csv.DictReader(f, delimiter='\t')
         for dictionary in reader:
-            deck_name, averse, reverse, stage, nxt_rep = dictionary['Deck name'], dictionary['Averse'], dictionary['Reverse'], dictionary['Stage'], dictionary['Next repeat']
+            deck_name, averse, reverse, stage, nxt_rep = dictionary['Deck name'], dictionary['Averse'], dictionary[
+                'Reverse'], dictionary['Stage'], dictionary['Next repeat']
+            print(deck_name, averse, reverse, stage, nxt_rep)
             new_card = Card(averse, reverse, stage, nxt_rep)
-            for deck in super_deck:
-                if deck.name == deck_name:
-                    deck.card_list.append(new_card)
+            finded = False
+            for i in range(len(super_deck)):
+                if super_deck[i].name == deck_name:
+                    finded = True
+                    deck.card_list.add(new_card)
                     break
-            else:
+            if not finded:
                 super_deck.append(Deck(deck_name, [new_card]))
-    
-    with open('achievements.txt', 'r') as f: #получаем информацию о достижениях
+
+    with open('achievements.txt', 'r') as f:  # получаем информацию о достижениях
         learned_cards = int(f.readline())
 
+
 def download_information():
-    with open('all_data.tsv', 'w') as f: #сохраняем всю информацию о колодах и карточках
-        f.write('Deck name' + '\t' + 'Averse' + '\t' + 'Reverse' + '\t' + 'Stage' + '\t' + 'Next repeat')
+    with open('all_data.tsv', 'w') as f:  # сохраняем всю информацию о колодах и карточках
+        f.write('Deck name' + '\t' + 'Averse' + '\t' + 'Reverse' + '\t' + 'Stage' + '\t' + 'Next repeat' + '\n')
         for deck in super_deck:
-            for card in deck.card_list:
-                f.write(deck.name + '\t' + card.averse + '\t' + card.reverse + '\t' + str(card.stage) + '\t' + str(card.nxt_rep) + '\n')
-    
-    with open('achievements.txt', 'w') as f: #сохраняем информацию о достижениях
+            for card in deck.card_list:  # если в колоде нет карточек, то она удаляется???
+                f.write(deck.name + '\t' + card.averse + '\t' + card.reverse + '\t' + str(card.stage) + '\t' + str(
+                    card.nxt_rep) + '\n')
+                print(deck.name + '\t' + card.averse + '\t' + card.reverse + '\t' + str(card.stage) + '\t' + str(
+                    card.nxt_rep) + '\n')
+
+    with open('achievements.txt', 'w') as f:  # сохраняем информацию о достижениях
         f.write(str(learned_cards))
+
 
 class Drawer():
     def __init__(self, window):
@@ -179,7 +205,7 @@ class Drawer():
     # override
     def start(self):
         return
-                            
+
 
 class Clrs:
     white = (255, 255, 255)
@@ -192,6 +218,7 @@ class Clrs:
     brown = (210, 180, 140)
     blue = (40, 40, 220)
 
+
 class Square:
     def __init__(self, scale, pos):
         self.x1 = pos[0]
@@ -201,23 +228,23 @@ class Square:
 
     def contains(self, pos):
         return self.x1 <= pos[0] <= self.x2 and \
-               self.y1 <= pos[1] <= self.y2
+            self.y1 <= pos[1] <= self.y2
+
 
 class MainMenu(Drawer):
-    
     ''' #этого по идее не должно существовать
         def __add_reverse_catalog(self, i):
             obj = {}
             for j in lst[i].lang:
                 obj[lst[i].lang[j]] = j
             lst.append(Catalog(f'{lst[i].name} reversed', obj))
-    '''    
-    
+    '''
+
     def __draw_catalog_item(self, catalog, pos):
         self._draw_rect('Учить', (50, 25), pos, 14, Clrs.blue)
         self._draw_rect(catalog.name, (700, 25), (pos[0] + 52, pos[1]), 16, Clrs.lgray)
-        self._draw_image('trashcan.jpg', (25, 25), (pos[0] + 754, pos[1]))
-        self._draw_image('refresh.png', (25, 25), (pos[0] + 781, pos[1]))
+        self._draw_image('trashcan.jpg', (25, 25), (pos[0] + 754, pos[1]))  # ИКОНКА УДАЛЕНИЯ
+        # self._draw_image('refresh.png', (25, 25), (pos[0]+781, pos[1]))
 
     def _set_menu(self):
         self.window.fill(Clrs.white)
@@ -228,7 +255,7 @@ class MainMenu(Drawer):
             actions.append(Square((50, 25), (100, (cnt) * 30)))
             actions.append(Square((700, 25), (152, (cnt) * 30)))
             actions.append(Square((25, 25), (854, (cnt) * 30)))
-            actions.append(Square((25, 25), (881, (cnt) * 30)))
+            # actions.append(Square((25, 25), (881, (cnt) * 30)))
             cnt += 1
         self._draw_rect('Добавить', (1000, 50), (0, 550), 18, Clrs.white)
         actions.append(Square((1000, 50), (0, 550)))
@@ -236,10 +263,10 @@ class MainMenu(Drawer):
         actions.append(Square((30, 30), (10, 10)))
         pygame.display.update()
         return actions
-    
+
     def start(self):
         actions = self._set_menu()
-        #pygame.display.flip()
+        # pygame.display.flip()
         while not self.isdestroyed:
             for event in pygame.event.get():
                 self._check_quit(event)
@@ -256,19 +283,18 @@ class MainMenu(Drawer):
                                 Achievements(self.window).start()
                                 break
                             if act % 4 == 0:
-                                #Кнопка учить, нажатие на которую вызывает d.play(), где d - колода, которую человек хочет учить
-                                pass # TODO #ЧТО ТУДУ?...
+                                super_deck[act // 4].play()
                             if act % 4 == 1:
                                 self.isdestroyed = True
                                 EditDeck(self.window).start(act // 4)
                                 break
                             if act % 4 == 2:
-                                super_deck.pop(act // 4)
+                                super_deck.pop(act // 4)  # УДАЛЕНИЕ
                                 self._set_menu()
                             if act % 4 == 3:
                                 self.__add_reverse_catalog(act // 4)
                                 actions = self._set_menu()
-                            
+
 
 class AddDeck(Drawer):
     def _set_menu(self):
@@ -285,10 +311,10 @@ class AddDeck(Drawer):
         actions.append(Square((25, 25), (18, 18)))
         pygame.display.update()
         return actions
-    
+
     def start(self):
         actions, text, isclicked = self._set_menu(), '', False
-        #pygame.display.flip()
+        # pygame.display.flip()
         while not self.isdestroyed:
             for event in pygame.event.get():
                 self._check_quit(event)
@@ -302,7 +328,7 @@ class AddDeck(Drawer):
                             if act == 1:
                                 if len(text) == 0:
                                     self._draw_rect('Поле не должно быть пустым',
-                                        (250, 40), (375, 400), 14, Clrs.gray)
+                                                    (250, 40), (375, 400), 14, Clrs.gray)
                                 else:
                                     super_deck.append(Deck(text, []))
                                     MainMenu(self.window).start()
@@ -318,16 +344,14 @@ class AddDeck(Drawer):
                 self._draw_input((400, 50), (300, 200), text, isclicked)
                 pygame.display.update()
 
-#ГДЕ УДАДЕНИЕ КОЛОДЫ
+
+# ГДЕ УДАДЕНИЕ КОЛОДЫ (см выше)
 
 class EditDeck(Drawer):
-    def __draw_card(self, i, j, y):
-        for card in super_deck[i].card_list:
-            if card.reverse == j:
-                reverse = card.reverse
-                break
-        self._draw_rect(f'{j} - {reverse}', (500, 50), (235, y), 18, Clrs.lgray)
+    def __draw_card(self, card, y):
+        self._draw_rect(f'{card.averse} - {card.reverse}', (500, 50), (235, y), 18, Clrs.lgray)
         self._draw_image('edit.png', (30, 30), (740, y + 10))
+        self._draw_image('trashcan.jpg', (30, 30), (780, y + 10))
 
     def __set_menu(self, ind):
         self.window.fill(Clrs.white)
@@ -342,22 +366,20 @@ class EditDeck(Drawer):
         self._draw_image('plus.png', (50, 50), (475, 540))
         actions.append(Square((50, 50), (475, 540)))
         cnt = 1
-        averse_list = []
-        for card in super_deck[ind].card_list:
-            averse_list.append(card.averse)
-        for j in averse_list[self.offset : self.offset + 8]:
+        for card in super_deck[ind].card_list[self.offset: self.offset + 8]:
             y = 60 * cnt
-            self.__draw_card(ind, j, y)
+            self.__draw_card(card, y)
             actions.append(Square((40, 40), (740, y + 5)))
+            actions.append(Square((40, 40), (780, y + 5)))
             cnt += 1
         pygame.display.update()
         return actions
-    
+
     def start(self, ind):
         self.offset = 0
         page = 0
         actions = self.__set_menu(ind)
-        #pygame.display.flip()
+        # pygame.display.flip()
         while not self.isdestroyed:
             for event in pygame.event.get():
                 self._check_quit(event)
@@ -366,13 +388,13 @@ class EditDeck(Drawer):
                         i = actions[act]
                         if i.contains(event.pos):
                             if act > 3:
-                                self.isdestroyed = True
-                                averse_list = []
-                                for card in super_deck[ind].card_list:
-                                    averse_list.append(card.averse)
-                                k = averse_list[act - 4]
-                                EditCard(self.window).start(ind, k)
-                                break
+                                if act % 2 == 0:
+                                    self.isdestroyed = True
+                                    EditCard(self.window).start(ind, page * 8 + (act - 4) // 2)
+                                    break
+                                else:  # удаление карточки
+                                    super_deck[ind].card_list.pop((act - 4) // 2)
+                                    self.__set_menu(ind)
                             if act == 0:
                                 self.isdestroyed = True
                                 MainMenu(self.window).start()
@@ -392,58 +414,6 @@ class EditDeck(Drawer):
                                 break
 
 
-class EditCard(Drawer):
-    def _set_menu(self, ind, word):
-        self.window.fill(Clrs.white)
-        actions = []
-        self._draw_rect('Редактирование карточки', (200, 20), (400, 20), 24, Clrs.white)
-        self._draw_image('back.png', (25, 25), (18, 18))
-        actions.append(Square((25, 25), (18, 18)))
-        isclicked = [False, False]
-        text = [word, super_deck[ind].card_list[word]]
-        self._draw_input((400, 50), (300, 200), text[0], isclicked[0])
-        actions.append(Square((400, 50), (300, 200)))
-        self._draw_input((400, 50), (300, 300), text[1], isclicked[1])
-        actions.append(Square((400, 50), (300, 300)))
-        pygame.display.update()
-        return actions
-
-    def start(self, ind, word):
-        actions = self._set_menu(ind, word)
-        for card in super_deck[ind].card_list:
-            if card.averse == word:
-                word_reverse = card.reverse
-                break
-        text = [word, word_reverse]
-        isclicked = [False, False]
-        #pygame.display.flip()
-        while not self.isdestroyed:
-            for event in pygame.event.get():
-                self._check_quit(event)
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    isclicked = [False, False]
-                    for act in range(len(actions)):
-                        i = actions[act]
-                        if i.contains(event.pos):
-                            if act == 0:
-                                self.isdestroyed = True
-                                EditDeck(self.window).start(ind)
-                                break
-                            if act == 1:
-                                isclicked = [True, False]
-                            if act == 2:
-                                isclicked = [False, True]
-                if event.type == pygame.KEYDOWN:
-                    for i in range(2):
-                        if isclicked[i]:
-                            if event.key == pygame.K_BACKSPACE:
-                                text[i] = text[i][:-1]
-                            else:
-                                text[i] += event.unicode
-                self._draw_input((400, 50), (300, 200), text[0], isclicked[0])
-                self._draw_input((400, 50), (300, 300), text[1], isclicked[1])
-                pygame.display.update()
-                            
 class AddCard(Drawer):
     def _set_menu(self, ind):
         self.window.fill(Clrs.white)
@@ -457,6 +427,8 @@ class AddCard(Drawer):
         actions.append(Square((400, 50), (300, 200)))
         self._draw_input((400, 50), (300, 300), text[1], isclicked[1])
         actions.append(Square((400, 50), (300, 300)))
+        self._draw_rect('Сохранить', (1000, 20), (0, 550), 20, Clrs.white)
+        actions.append(Square((1000, 20), (0, 550)))
         pygame.display.update()
         return actions
 
@@ -464,7 +436,7 @@ class AddCard(Drawer):
         actions = self._set_menu(ind)
         text = ['', '']
         isclicked = [False, False]
-        #pygame.display.flip()
+        # pygame.display.flip()
         while not self.isdestroyed:
             for event in pygame.event.get():
                 self._check_quit(event)
@@ -481,6 +453,15 @@ class AddCard(Drawer):
                                 isclicked = [True, False]
                             if act == 2:
                                 isclicked = [False, True]
+                            if act == 3:
+                                if len(text[0]) == 0 or len(text[1]) == 0:
+                                    self._draw_rect('Поля не должны быть пустыми',
+                                                    (250, 40), (375, 450), 14, Clrs.gray)
+                                else:
+                                    super_deck[ind].add_card(Card(text[0], text[1], 1, datetime.now()))
+                                    self.isdestroyed = True
+                                    EditDeck(self.window).start(ind)
+                                    break
                 if event.type == pygame.KEYDOWN:
                     for i in range(2):
                         if isclicked[i]:
@@ -490,9 +471,72 @@ class AddCard(Drawer):
                                 text[i] += event.unicode
                 self._draw_input((400, 50), (300, 200), text[0], isclicked[0])
                 self._draw_input((400, 50), (300, 300), text[1], isclicked[1])
-                pygame.display.update()                            
+                pygame.display.update()
 
-#УДАЛЕНИЕ КАРТОЧКИ ГДЕ
+
+class EditCard(Drawer):
+    def _set_menu(self, ind, iword):
+        self.window.fill(Clrs.white)
+        card = super_deck[ind].card_list[iword]
+        actions = []
+        self._draw_rect('Редактирование карточки', (200, 20), (400, 20), 24, Clrs.white)
+        self._draw_image('back.png', (25, 25), (18, 18))
+        actions.append(Square((25, 25), (18, 18)))
+        isclicked = [False, False]
+        text = [card.averse, card.reverse]
+        self._draw_input((400, 50), (300, 200), text[0], isclicked[0])
+        actions.append(Square((400, 50), (300, 200)))
+        self._draw_input((400, 50), (300, 300), text[1], isclicked[1])
+        actions.append(Square((400, 50), (300, 300)))
+        self._draw_rect('Сохранить', (1000, 20), (0, 550), 20, Clrs.white)
+        actions.append(Square((1000, 20), (0, 550)))
+        pygame.display.update()
+        return actions
+
+    def start(self, ind, iword):
+        actions = self._set_menu(ind, iword)
+        card = super_deck[ind].card_list[iword]
+        text = [card.averse, card.reverse]
+        isclicked = [False, False]
+        # pygame.display.flip()
+        while not self.isdestroyed:
+            for event in pygame.event.get():
+                self._check_quit(event)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    isclicked = [False, False]
+                    for act in range(len(actions)):
+                        i = actions[act]
+                        if i.contains(event.pos):
+                            if act == 0:
+                                self.isdestroyed = True
+                                EditDeck(self.window).start(ind)
+                                break
+                            if act == 1:
+                                isclicked = [True, False]
+                            if act == 2:
+                                isclicked = [False, True]
+                            if act == 3:
+                                if len(text[0]) == 0 or len(text[1]) == 0:
+                                    self._draw_rect('Поля не должны быть пустыми',
+                                                    (250, 40), (375, 450), 14, Clrs.gray)
+                                else:
+                                    super_deck[ind].card_list[iword] = Card(text[0], text[1], 1, datetime.now())
+                                    self.isdestroyed = True
+                                    EditDeck(self.window).start(ind)
+                                    break
+                if event.type == pygame.KEYDOWN:
+                    for i in range(2):
+                        if isclicked[i]:
+                            if event.key == pygame.K_BACKSPACE:
+                                text[i] = text[i][:-1]
+                            else:
+                                text[i] += event.unicode
+                self._draw_input((400, 50), (300, 200), text[0], isclicked[0])
+                self._draw_input((400, 50), (300, 300), text[1], isclicked[1])
+                pygame.display.update()
+
+
+# УДАЛЕНИЕ КАРТОЧКИ ГДЕ (реализовала на экране редактирования deck-а)
 
 class Achievements(Drawer):
     def _set_menu(self):
@@ -502,13 +546,13 @@ class Achievements(Drawer):
             pass
         elif count_achievements() == 100:
             pass
-        #и так доделать для остальных, последний случай - >= сколько-то, а не только само это число
+        # и так доделать для остальных, последний случай - >= сколько-то, а не только само это число
         pygame.display.flip()
 
     def start(self):
         self._set_menu()
-        #pygame.display.flip()
-        
+        # pygame.display.flip()
+
 
 class MyGame:
     SIZE = (1000, 600)
@@ -519,8 +563,10 @@ class MyGame:
         self.main = MainMenu(self.window)
 
     def start(self):
-        self.main.start()
         upload_information()
+        print('abc')
+        self.main.start()
+
 
 super_deck = []
 learned_cards = 0
