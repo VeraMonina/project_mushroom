@@ -603,7 +603,7 @@ class Achievements(Drawer):
         pygame.draw.rect(screen, BLUE, (0, 0, 1000, 400))
 
         # солнце
-        sun_surf = pg.image.load('sun.bmp').convert()
+        sun_surf = pg.image.load('ach_pics/sun.bmp').convert()
         scale = pygame.transform.scale(
             sun_surf, (sun_surf.get_width() // 1.5,
                        sun_surf.get_height() // 1.5))
@@ -613,7 +613,7 @@ class Achievements(Drawer):
         pg.display.update()
 
         # облако
-        obl_surf = pg.image.load('cloud20.bmp').convert()
+        obl_surf = pg.image.load('ach_pics/cloud20.bmp').convert()
         scale = pygame.transform.scale(
             obl_surf, (obl_surf.get_width() // 3,
                        obl_surf.get_height() // 3))
@@ -623,7 +623,7 @@ class Achievements(Drawer):
         pg.display.update()
 
         # облако2
-        obl2_surf = pg.image.load('cloud20.bmp').convert()
+        obl2_surf = pg.image.load('ach_pics/cloud20.bmp').convert()
         scale = pygame.transform.scale(
             obl2_surf, (obl2_surf.get_width() // 4,
                         obl2_surf.get_height() // 4))
@@ -633,7 +633,7 @@ class Achievements(Drawer):
         pg.display.update()
         if count_achievements() == 50:
             def reward_fly_agaric_1():
-                mush_fly_surf = pg.image.load('mush.bmp').convert()
+                mush_fly_surf = pg.image.load('ach_pics/mush.bmp').convert()
                 mush_fly_rect = mush_fly_surf.get_rect(bottomright=(700, 550))
                 mush_fly_surf.set_colorkey((0, 0, 0))
                 screen.blit(mush_fly_surf, mush_fly_rect)
@@ -641,7 +641,7 @@ class Achievements(Drawer):
                 return reward_fly_agaric_1
         elif count_achievements() == 100:
             def reward_fly_agaric_2():
-                mush_fly_surf = pg.image.load('mush.bmp').convert()
+                mush_fly_surf = pg.image.load('ach_pics/mush.bmp').convert()
                 mush_fly_rect = mush_fly_surf.get_rect(bottomright=(700, 550))
                 mush_fly_surf.set_colorkey((0, 0, 0))
                 screen.blit(mush_fly_surf, mush_fly_rect)
@@ -657,7 +657,7 @@ class Achievements(Drawer):
                 return reward_fly_agaric_2
         elif count_achievements() == 150:
             def reward_fly_agaric_3():
-                mush_fly_surf = pg.image.load('mush.bmp').convert()
+                mush_fly_surf = pg.image.load('ach_pics/mush.bmp').convert()
                 mush_fly_rect = mush_fly_surf.get_rect(bottomright=(700, 550))
                 mush_fly_surf.set_colorkey((0, 0, 0))
                 screen.blit(mush_fly_surf, mush_fly_rect)
@@ -681,7 +681,7 @@ class Achievements(Drawer):
                 return reward_fly_agaric_3
         elif count_achievements() == 200:
             def reward_chanterelles_1():
-                mush_chan_surf = pg.image.load('lis.bmp').convert()
+                mush_chan_surf = pg.image.load('ach_pics/lis.bmp').convert()
                 mush_chan_rect = mush_chan_surf.get_rect(bottomright=(700, 550))
                 mush_chan_surf.set_colorkey((0, 0, 0))
                 screen.blit(mush_chan_surf, mush_chan_rect)
@@ -689,7 +689,7 @@ class Achievements(Drawer):
                 return reward_chanterelles_1
         elif count_achievements() == 250:
             def reward_chanterelles_2():
-                mush_chan_surf = pg.image.load('lis.bmp').convert()
+                mush_chan_surf = pg.image.load('ach_pics/lis.bmp').convert()
                 mush_chan_rect = mush_chan_surf.get_rect(bottomright=(700, 550))
                 mush_chan_surf.set_colorkey((0, 0, 0))
                 screen.blit(mush_chan_surf, mush_chan_rect)
@@ -729,7 +729,7 @@ class Achievements(Drawer):
                 return reward_chanterelles_3
         elif count_achievements() == 350:
             def reward_white_mush_1():
-                mush_white_surf = pg.image.load('white4.bmp').convert()
+                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 1.5,
                                       mush_white_surf.get_height() // 1.5))
@@ -740,7 +740,7 @@ class Achievements(Drawer):
                 return reward_white_mush_1
         elif count_achievements() == 400:
             def reward_white_mush_2():
-                mush_white_surf = pg.image.load('white4.bmp').convert()
+                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 1.5,
                                       mush_white_surf.get_height() // 1.5))
@@ -749,7 +749,7 @@ class Achievements(Drawer):
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
 
-                mush_white_surf = pg.image.load('white4.bmp').convert()
+                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 3,
                                       mush_white_surf.get_height() // 3))
@@ -762,7 +762,7 @@ class Achievements(Drawer):
         elif count_achievements() == 450:
             def reward_white_mush_3():
 
-                mush_white_surf = pg.image.load('white4.bmp').convert()
+                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 1.5,
                                       mush_white_surf.get_height() // 1.5))
@@ -771,7 +771,7 @@ class Achievements(Drawer):
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
 
-                mush_white_surf = pg.image.load('white4.bmp').convert()
+                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 3,
                                       mush_white_surf.get_height() // 3))
@@ -780,7 +780,7 @@ class Achievements(Drawer):
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
                 pygame.time.wait(1000)
-                mush_white_surf = pg.image.load('white4.bmp').convert()
+                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 2,
                                       mush_white_surf.get_height() // 2))
@@ -791,7 +791,7 @@ class Achievements(Drawer):
                 return reward_white_mush_3
         elif count_achievements() == 500:
             def reward_honey_mush_1():
-                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 2.5,
                                       mush_honey_surf.get_height() // 2.5))
@@ -802,7 +802,7 @@ class Achievements(Drawer):
                 return reward_honey_mush_1
         elif count_achievements() == 550:
             def reward_honey_mush_2():
-                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 2.5,
                                       mush_honey_surf.get_height() // 2.5))
@@ -811,7 +811,7 @@ class Achievements(Drawer):
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
 
-                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 4,
                                       mush_honey_surf.get_height() // 4))
@@ -822,7 +822,7 @@ class Achievements(Drawer):
                 return reward_honey_mush_2
         elif count_achievements() == 600:
             def reward_honey_mush_3():
-                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 2.5,
                                       mush_honey_surf.get_height() // 2.5))
@@ -831,7 +831,7 @@ class Achievements(Drawer):
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
 
-                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 4,
                                       mush_honey_surf.get_height() // 4))
@@ -840,7 +840,7 @@ class Achievements(Drawer):
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
 
-                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 3,
                                       mush_honey_surf.get_height() // 3))
@@ -851,7 +851,7 @@ class Achievements(Drawer):
                 return reward_honey_mush_3
         elif count_achievements() == 650:
             def reward_all():
-                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                mush_honey_surf = pg.image.load('ach_pics/honeymushrooms.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_honey_surf, (mush_honey_surf.get_width() // 4,
                                       mush_honey_surf.get_height() // 4))
@@ -860,7 +860,7 @@ class Achievements(Drawer):
                 screen.blit(scale, mush_honey_rect)
                 pg.display.update()
 
-                mush_white_surf = pg.image.load('white4.bmp').convert()
+                mush_white_surf = pg.image.load('ach_pics/white4.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_white_surf, (mush_white_surf.get_width() // 3,
                                       mush_white_surf.get_height() // 3))
@@ -869,7 +869,7 @@ class Achievements(Drawer):
                 screen.blit(scale, mush_white_rect)
                 pg.display.update()
 
-                mush_chan_surf = pg.image.load('lis.bmp').convert()
+                mush_chan_surf = pg.image.load('ach_pics/lis.bmp').convert()
                 scale = pygame.transform.scale(
                     mush_chan_surf, (mush_chan_surf.get_width() // 1.3,
                                      mush_chan_surf.get_height() // 1.3))
@@ -878,7 +878,7 @@ class Achievements(Drawer):
                 screen.blit(scale, mush_chan_rect)
                 pg.display.update()
 
-                mush_fly_surf = pg.image.load('mush.bmp').convert()
+                mush_fly_surf = pg.image.load('ach_pics/mush.bmp').convert()
                 mush_fly_rect = mush_fly_surf.get_rect(bottomright=(770, 550))
                 mush_fly_surf.set_colorkey((0, 0, 0))
                 screen.blit(mush_fly_surf, mush_fly_rect)
