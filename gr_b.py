@@ -1,5 +1,6 @@
 from datetime import *
 from queue import *
+import pygame as pg
 import pygame
 import csv
 
@@ -542,12 +543,354 @@ class Achievements(Drawer):
     def _set_menu(self):
         self.window.fill(Clrs.white)
         # TODO
+        pygame.init()
+        size_w, size_h = 1000, 600
+        screen = pygame.display.set_mode((size_w, size_h))
+
+        yellow = (255, 255, 0)
+        orange = (255, 165, 0)
+        background = (255, 255, 255)
+
+        r = random.randint(400, 400)
+        x, x1 = r, r
+        y, y1 = r, r
+        a = 100
+        b = 35
+        c = 85
+        d = 50
+        e = 65
+
+        FPS = 80
+        clock = pygame.time.Clock()
+
+        def star(x, x1, y1, a, b, c, d, e):
+            pygame.draw.lines(screen, orange, True, ((x1, y1), (x + a, y1), (x - b, y1 - e), (x1 + d, y1)), 7)
+            pygame.draw.lines(screen, orange, True, ((x1 + d, y1 + d), (x1 + c, y1 - e), (x1, y1), (x1 + d, y1)), 7)
+            pygame.draw.polygon(screen, yellow, ((x1, y1), (x + a, y1), (x - b, y1 - e), (x1 + d, y1)))
+            pygame.draw.polygon(screen, yellow, ((x1 + d, y1 + d), (x1 + c, y1 - e), (x1, y1), (x1 + d, y1)))
+
+        while True:
+            clock.tick(FPS)
+            screen.fill(background)  # сначала цвет, потом движение
+            if x1 >= 0 and x + a <= 1000:
+                star(x, x1, y1, a, b, c, d, e)
+                x += 1
+                x1 -= 2
+                y1 -= 1
+                a += 2
+                b += 2
+                c += 2
+                d += 1
+                c += 1
+            else:
+                quit(screen)
+            pygame.display.update()
+            pygame.display.flip()
+        #грибы
+        pygame.init()
+
+        # размер окна
+        screen = pygame.display.set_mode((1000, 600))
+        pygame.display.set_caption('Achievements')
+        GREEN = (0, 69, 36)
+        BLUE = (0, 191, 255)
+
+        # низ - трава
+        pygame.draw.rect(screen, GREEN, (0, 400, 1000, 200))
+
+        # верх - небо
+        pygame.draw.rect(screen, BLUE, (0, 0, 1000, 400))
+
+        # солнце
+        sun_surf = pg.image.load('sun.bmp').convert()
+        scale = pygame.transform.scale(
+            sun_surf, (sun_surf.get_width() // 1.5,
+                       sun_surf.get_height() // 1.5))
+        sun_rect = sun_surf.get_rect(bottomright=(1100, 350))
+        scale.set_colorkey((0, 0, 0))
+        screen.blit(scale, sun_rect)
+        pg.display.update()
+
+        # облако
+        obl_surf = pg.image.load('cloud20.bmp').convert()
+        scale = pygame.transform.scale(
+            obl_surf, (obl_surf.get_width() // 3,
+                       obl_surf.get_height() // 3))
+        obl_rect = obl_surf.get_rect(bottomright=(1100, 700))
+        scale.set_colorkey((0, 0, 0))
+        screen.blit(scale, obl_rect)
+        pg.display.update()
+
+        # облако2
+        obl2_surf = pg.image.load('cloud20.bmp').convert()
+        scale = pygame.transform.scale(
+            obl2_surf, (obl2_surf.get_width() // 4,
+                        obl2_surf.get_height() // 4))
+        obl2_rect = obl2_surf.get_rect(bottomright=(1600, 750))
+        scale.set_colorkey((0, 0, 0))
+        screen.blit(scale, obl2_rect)
+        pg.display.update()
         if count_achievements() == 50:
-            pass
+            def reward_fly_agaric_1():
+                mush_fly_surf = pg.image.load('mush.bmp').convert()
+                mush_fly_rect = mush_fly_surf.get_rect(bottomright=(700, 550))
+                mush_fly_surf.set_colorkey((0, 0, 0))
+                screen.blit(mush_fly_surf, mush_fly_rect)
+                pg.display.update()
+                return reward_fly_agaric_1
         elif count_achievements() == 100:
-            pass
+            def reward_fly_agaric_2():
+                mush_fly_surf = pg.image.load('mush.bmp').convert()
+                mush_fly_rect = mush_fly_surf.get_rect(bottomright=(700, 550))
+                mush_fly_surf.set_colorkey((0, 0, 0))
+                screen.blit(mush_fly_surf, mush_fly_rect)
+                pg.display.update()
+
+                scale = pygame.transform.scale(
+                    mush_fly_surf, (mush_fly_surf.get_width() // 2,
+                                    mush_fly_surf.get_height() // 2))
+                scale_rect = scale.get_rect(center=(350, 450))
+                screen.blit(scale, scale_rect)
+                pygame.display.update(mush_fly_rect)
+                pygame.time.wait(1000)
+                return reward_fly_agaric_2
+        elif count_achievements() == 150:
+            def reward_fly_agaric_3():
+                mush_fly_surf = pg.image.load('mush.bmp').convert()
+                mush_fly_rect = mush_fly_surf.get_rect(bottomright=(700, 550))
+                mush_fly_surf.set_colorkey((0, 0, 0))
+                screen.blit(mush_fly_surf, mush_fly_rect)
+                pg.display.update()
+
+                scale = pygame.transform.scale(
+                    mush_fly_surf, (mush_fly_surf.get_width() // 2,
+                                    mush_fly_surf.get_height() // 2))
+                scale_rect = scale.get_rect(center=(350, 450))
+                screen.blit(scale, scale_rect)
+                pygame.display.update(mush_fly_rect)
+                pygame.time.wait(1000)
+
+                scale = pygame.transform.scale(
+                    mush_fly_surf, (mush_fly_surf.get_width() // 1.5,
+                                    mush_fly_surf.get_height() // 1.5))
+                scale_rect = scale.get_rect(center=(700, 465))
+                screen.blit(scale, scale_rect)
+                pygame.display.update(mush_fly_rect)
+                pygame.time.wait(1000)
+                return reward_fly_agaric_3
+        elif count_achievements() == 200:
+            def reward_chanterelles_1():
+                mush_chan_surf = pg.image.load('lis.bmp').convert()
+                mush_chan_rect = mush_chan_surf.get_rect(bottomright=(700, 550))
+                mush_chan_surf.set_colorkey((0, 0, 0))
+                screen.blit(mush_chan_surf, mush_chan_rect)
+                pg.display.update()
+                return reward_chanterelles_1
+        elif count_achievements() == 250:
+            def reward_chanterelles_2():
+                mush_chan_surf = pg.image.load('lis.bmp').convert()
+                mush_chan_rect = mush_chan_surf.get_rect(bottomright=(700, 550))
+                mush_chan_surf.set_colorkey((0, 0, 0))
+                screen.blit(mush_chan_surf, mush_chan_rect)
+                pg.display.update()
+
+                scale = pygame.transform.scale(
+                    mush_chan_surf, (mush_chan_surf.get_width() // 2,
+                                     mush_chan_surf.get_height() // 2))
+                scale_rect = scale.get_rect(center=(300, 450))
+                screen.blit(scale, scale_rect)
+                pygame.display.update(mush_chan_rect)
+                pygame.time.wait(1000)
+                return reward_chanterelles_2
+        elif count_achievements() == 300:
+            def reward_chanterelles_3():
+                mush_chan_surf = pg.image.load('lis.bmp').convert()
+                mush_chan_rect = mush_chan_surf.get_rect(bottomright=(700, 550))
+                mush_chan_surf.set_colorkey((0, 0, 0))
+                screen.blit(mush_chan_surf, mush_chan_rect)
+                pg.display.update()
+
+                scale = pygame.transform.scale(
+                    mush_chan_surf, (mush_chan_surf.get_width() // 2,
+                                     mush_chan_surf.get_height() // 2))
+                scale_rect = scale.get_rect(center=(300, 450))
+                screen.blit(scale, scale_rect)
+                pygame.display.update(mush_chan_rect)
+                pygame.time.wait(1000)
+
+                scale = pygame.transform.scale(
+                    mush_chan_surf, (mush_chan_surf.get_width() // 1.5,
+                                     mush_chan_surf.get_height() // 1.5))
+                scale_rect = scale.get_rect(center=(750, 465))
+                screen.blit(scale, scale_rect)
+                pygame.display.update(mush_chan_rect)
+                pygame.time.wait(1000)
+                return reward_chanterelles_3
+        elif count_achievements() == 350:
+            def reward_white_mush_1():
+                mush_white_surf = pg.image.load('white4.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_white_surf, (mush_white_surf.get_width() // 1.5,
+                                      mush_white_surf.get_height() // 1.5))
+                mush_white_rect = mush_white_surf.get_rect(bottomright=(870, 700))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_white_rect)
+                pg.display.update()
+                return reward_white_mush_1
+        elif count_achievements() == 400:
+            def reward_white_mush_2():
+                mush_white_surf = pg.image.load('white4.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_white_surf, (mush_white_surf.get_width() // 1.5,
+                                      mush_white_surf.get_height() // 1.5))
+                mush_white_rect = mush_white_surf.get_rect(bottomright=(870, 700))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_white_rect)
+                pg.display.update()
+
+                mush_white_surf = pg.image.load('white4.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_white_surf, (mush_white_surf.get_width() // 3,
+                                      mush_white_surf.get_height() // 3))
+                mush_white_rect = mush_white_surf.get_rect(bottomright=(690, 900))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_white_rect)
+                pg.display.update()
+                pygame.time.wait(1000)
+                return reward_white_mush_2
+        elif count_achievements() == 450:
+            def reward_white_mush_3():
+
+                mush_white_surf = pg.image.load('white4.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_white_surf, (mush_white_surf.get_width() // 1.5,
+                                      mush_white_surf.get_height() // 1.5))
+                mush_white_rect = mush_white_surf.get_rect(bottomright=(870, 700))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_white_rect)
+                pg.display.update()
+
+                mush_white_surf = pg.image.load('white4.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_white_surf, (mush_white_surf.get_width() // 3,
+                                      mush_white_surf.get_height() // 3))
+                mush_white_rect = mush_white_surf.get_rect(bottomright=(690, 900))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_white_rect)
+                pg.display.update()
+                pygame.time.wait(1000)
+                mush_white_surf = pg.image.load('white4.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_white_surf, (mush_white_surf.get_width() // 2,
+                                      mush_white_surf.get_height() // 2))
+                mush_white_rect = mush_white_surf.get_rect(bottomright=(1200, 850))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_white_rect)
+                pg.display.update()
+                return reward_white_mush_3
+        elif count_achievements() == 500:
+            def reward_honey_mush_1():
+                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_honey_surf, (mush_honey_surf.get_width() // 2.5,
+                                      mush_honey_surf.get_height() // 2.5))
+                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1400, 1000))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_honey_rect)
+                pg.display.update()
+                return reward_honey_mush_1
+        elif count_achievements() == 550:
+            def reward_honey_mush_2():
+                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_honey_surf, (mush_honey_surf.get_width() // 2.5,
+                                      mush_honey_surf.get_height() // 2.5))
+                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1400, 1000))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_honey_rect)
+                pg.display.update()
+
+                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_honey_surf, (mush_honey_surf.get_width() // 4,
+                                      mush_honey_surf.get_height() // 4))
+                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1200, 1125))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_honey_rect)
+                pg.display.update()
+                return reward_honey_mush_2
+        elif count_achievements() == 600:
+            def reward_honey_mush_3():
+                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_honey_surf, (mush_honey_surf.get_width() // 2.5,
+                                      mush_honey_surf.get_height() // 2.5))
+                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1400, 1000))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_honey_rect)
+                pg.display.update()
+
+                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_honey_surf, (mush_honey_surf.get_width() // 4,
+                                      mush_honey_surf.get_height() // 4))
+                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1200, 1125))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_honey_rect)
+                pg.display.update()
+
+                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_honey_surf, (mush_honey_surf.get_width() // 3,
+                                      mush_honey_surf.get_height() // 3))
+                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1700, 1105))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_honey_rect)
+                pg.display.update()
+                return reward_honey_mush_3
+        elif count_achievements() == 650:
+            def reward_all():
+                mush_honey_surf = pg.image.load('honeymushrooms.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_honey_surf, (mush_honey_surf.get_width() // 4,
+                                      mush_honey_surf.get_height() // 4))
+                mush_honey_rect = mush_honey_surf.get_rect(bottomright=(1860, 1145))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_honey_rect)
+                pg.display.update()
+
+                mush_white_surf = pg.image.load('white4.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_white_surf, (mush_white_surf.get_width() // 3,
+                                      mush_white_surf.get_height() // 3))
+                mush_white_rect = mush_white_surf.get_rect(bottomright=(670, 850))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_white_rect)
+                pg.display.update()
+
+                mush_chan_surf = pg.image.load('lis.bmp').convert()
+                scale = pygame.transform.scale(
+                    mush_chan_surf, (mush_chan_surf.get_width() // 1.3,
+                                     mush_chan_surf.get_height() // 1.3))
+                mush_chan_rect = mush_chan_surf.get_rect(bottomright=(580, 680))
+                scale.set_colorkey((0, 0, 0))
+                screen.blit(scale, mush_chan_rect)
+                pg.display.update()
+
+                mush_fly_surf = pg.image.load('mush.bmp').convert()
+                mush_fly_rect = mush_fly_surf.get_rect(bottomright=(770, 550))
+                mush_fly_surf.set_colorkey((0, 0, 0))
+                screen.blit(mush_fly_surf, mush_fly_rect)
+                pg.display.update()
+                return reward_all
         # и так доделать для остальных, последний случай - >= сколько-то, а не только само это число
         pygame.display.flip()
+
+    def start(self):
+        self._set_menu()
+        # pygame.display.flip()
+
+
 
     def start(self):
         self._set_menu()
