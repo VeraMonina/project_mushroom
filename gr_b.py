@@ -3,6 +3,7 @@ from queue import *
 import pygame as pg
 import pygame
 import csv
+import random
 
 
 class My_Queue(Queue):
